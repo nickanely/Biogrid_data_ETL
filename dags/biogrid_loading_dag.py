@@ -8,9 +8,18 @@ from airflow.operators.python import PythonOperator, BranchPythonOperator
 from airflow.providers.postgres.operators.postgres import PostgresOperator
 from airflow.utils.trigger_rule import TriggerRule
 
-from biogrid_ETL.script.ingest_data import ingest_data
-from biogrid_ETL.script.load_biogrid import load_biogrid
-from biogrid_ETL.script.version_checker import check_version_existence
+from biogrid_ETL.scripts.ingest_data import ingest_data
+from biogrid_ETL.scripts.load_biogrid import load_biogrid
+from biogrid_ETL.scripts.get_latest_version import get_latest_version
+from biogrid_ETL.scripts.check_version_existence import check_version_existence
+
+
+def determine_version(params):
+    version = params['version']
+    if version.lower() == 'latest':
+        version = get_latest_version()
+    return version
+
 
 with DAG(
         dag_id='biogrid_loading_dag',
@@ -24,6 +33,11 @@ with DAG(
         }
 ) as dag:
     start_op = EmptyOperator(task_id='start')
+
+    determine_version_op = PythonOperator(
+        task_id='determine_version',
+        python_callable=determine_version,
+    )
 
     check_version_existence_op = BranchPythonOperator(
         task_id='check_version_existence',
