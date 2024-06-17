@@ -11,9 +11,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the DAGs directory
 COPY dags /opt/airflow/dags
 
-
-
-
-
 # Set the user to airflow
 USER airflow

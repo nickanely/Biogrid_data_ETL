@@ -13,8 +13,8 @@ from biogrid_ETL.script.load_biogrid import load_biogrid
 from biogrid_ETL.script.version_checker import check_version_existence
 
 with DAG(
-        dag_id='32.2_practical_task',
-        start_date=pendulum.today(),
+        dag_id='biogrid_loading_dag',
+        start_date=pendulum.datetime(2024, 6, 18),
         schedule=None,
         tags=['biogrid', 'biogrid_HW', 'Homework_32.2'],
         description='A DAG to load biogrid from website into Postgres database',
